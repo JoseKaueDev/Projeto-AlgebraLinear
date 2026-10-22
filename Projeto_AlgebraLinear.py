@@ -1,3 +1,69 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+def calcular_equacao_plano_e_gerar_grafico(matriz_A, matriz_B):
+    # Extrair o Ponto P0 e o Vetor n de dentro das suas matrizes existentes
+    P0 = matriz_A[0]  # Pega a primeira linha da matriz_A [1, 2, 3]
+    n = matriz_B[0]   # Pega a primeira linha da matriz_B [9, 8, 7]
+    
+    # 2. Separar as coordenadas para facilitar o cálculo
+    x0, y0, z0 = P0[0], P0[1], P0[2]
+    a, b, c = n[0], n[1], n[2]
+    
+    # 3. Calcular o d: d = -(a*x0 + b*y0 + c*z0) e contando o custo 
+    operacoes = 0
+    termo_1 = a * x0; operacoes += 1
+    termo_2 = b * y0; operacoes += 1
+    termo_3 = c * z0; operacoes += 1
+    soma_interna = termo_1 + termo_2 + termo_3; operacoes += 2
+    d = -soma_interna; operacoes += 1
+    
+    print("==========================================================")
+    print("      ATIVIDADE: EQUAÇÃO DO PLANO COM MATRIZES EM 3D     ")
+    print("==========================================================")
+    print(f"Ponto P0 extraído da Matriz A (linha 1): {P0}")
+    print(f"Vetor Normal n extraído da Matriz B (linha 1): {n}")
+    print(f"Cálculo: {a}*(x - {x0}) + {b}*(y - {y0}) + {c}*(z - {z0}) = 0")
+    print(f"EQUAÇÃO CARTESIANA DO PLANO π: {a}x + {b}y + {c}z + ({d}) = 0")
+    print(f"Operações computacionais no cálculo: {operacoes}")
+    print("Gerando visualização gráfica em 3D...\n")
+    
+    # 4. Construção da Visualização 3D
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Criando a malha do plano deitado no espaço
+    x = np.linspace(-5, 10, 20)
+    y = np.linspace(-5, 10, 20)
+    X, Y = np.meshgrid(x, y)
+    
+    # Resolvendo a equação para obter Z (altura do plano): z = (-a*x - b*y - d) / c
+    Z = (-a * X - b * Y - d) / c
+    
+    # Plota a superfície do plano (translúcida para ver atrás)
+    ax.plot_surface(X, Y, Z, alpha=0.5, color='royalblue', label='Plano π')
+    
+    # Plota o ponto P0 no espaço (como uma esfera vermelha)
+    ax.scatter([x0], [y0], [z0], color='red', s=100, label=f'P0 {P0}', zorder=5)
+    
+    # Plota o vetor normal (vetor que "sai" do ponto em direção perpendicular)
+    # n[0], n[1], n[2] divididos por 3 apenas para reduzir o tamanho visual da seta na escala
+    ax.quiver(x0, y0, z0, a/2, b/2, c/2, color='black', linewidth=3, arrow_length_ratio=0.3, label=f'Vetor normal n {n}')
+    
+    # Legenda e formatação
+    ax.set_title(f'Plano π: {a}x + {b}y + {c}z + ({d}) = 0', fontsize=12, fontweight='bold')
+    ax.set_xlabel('Eixo X')
+    ax.set_ylabel('Eixo Y')
+    ax.set_zlabel('Eixo Z')
+    ax.legend()
+    
+    # Definindo os limites do gráfico
+    ax.set_xlim([-5, 10])
+    ax.set_ylim([-5, 10])
+    ax.set_zlim([-10, 10])
+    
+    plt.show()
+
 def multiplicar_matrizes(matriz_A, matriz_B):
     total_linhas_A = len(matriz_A)
     total_colunas_A = len(matriz_A[0])
@@ -164,3 +230,5 @@ print(f"   - Conclusão              : {'Comutou (Raro)' if sao_iguais_AB_BA els
 print(f"   - Operações para A * B   : {ops_AB}")
 print(f"   - Operações para B * A   : {ops_BA}")
 print(f"   - Custo total do teste   : {ops_AB + ops_BA} operações\n")
+
+calcular_equacao_plano_e_gerar_grafico(matriz_A, matriz_B)
